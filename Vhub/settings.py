@@ -46,9 +46,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://vhub-5dvu.onrender.com").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
+# Remove any empty strings from the list (Fixes the error)
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS if origin.strip()]
 
+# If still empty, allow only the backend URL
+if not CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS = ["https://vhub-5dvu.onrender.com"]
 
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -208,3 +213,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
+
+DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'vcoders')
+DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'vcoders04@gmail.com')
+DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'vcoders@123')
