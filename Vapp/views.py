@@ -48,13 +48,29 @@ import textwrap
 from .models import Event, EventAnnouncement, Notification
 from .serializers import EventAnnouncementSerializer, NotificationSerializer
 
+def get_fonts():
+    """ Returns the correct fonts based on OS (Windows or Linux) """
+    
+    # Font selection based on OS
+    if platform.system() == "Windows":
+        font_path_bold = "C:/Windows/Fonts/arialbd.ttf"  # Windows path (Bold Arial)
+        font_path_regular = "C:/Windows/Fonts/Arial.ttf"  # Windows path (Regular Arial)
+    else:
+        font_path_bold = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"  # Linux (Render) path (Bold)
+        font_path_regular = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"  # Linux (Render) path (Regular)
+
+    try:
+        name_font = ImageFont.truetype(font_path_bold, 50)
+        details_font = ImageFont.truetype(font_path_regular, 30)
+    except OSError:
+        print("❌ Font not found! Using default PIL font.")
+        name_font = ImageFont.load_default()
+        details_font = ImageFont.load_default()
+
+    return name_font, details_font  # Return both fonts
 
 
-font_path_bold = "C:\Windows\Fonts\arialbd"  # Use Arial Bold
-font_path_regular = "C:\Windows\Fonts\Arial"  # Use Arial Regular
 
-name_font = ImageFont.truetype("arial.ttf", 50)
-details_font = ImageFont.truetype("arial.ttf", 30)
 
 
 User = get_user_model()
