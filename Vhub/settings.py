@@ -15,8 +15,9 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 import platform
+import dj_database_url
+PORT = os.getenv("PORT")  # Let Render define the correct port
 
-PORT = os.getenv("PORT", "10000")
 
 load_dotenv()
 
@@ -116,27 +117,10 @@ AUTH_USER_MODEL = 'Vapp.User'
 
 
 
-
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql://root:root@localhost:3306/Vh_db")
-
-db_scheme, db_info = DATABASE_URL.split("://")
-db_user_pass, db_host_port_name = db_info.split("@")
-db_user, db_pass = db_user_pass.split(":")
-db_host_port, db_name = db_host_port_name.split("/")
-db_host, db_port = db_host_port.split(":")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://vh_db_user:DMtjZrlbixTX30fhTvepRl0tXQdtZA3G@dpg-cvelmb2n91rc73bikgd0-a/vh_db")
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': db_name,
-        'USER': db_user,
-        'PASSWORD': db_pass,
-        'HOST': db_host,
-        'PORT': int(db_port),  # Ensure port is an integer
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
+    'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 }
 
 
