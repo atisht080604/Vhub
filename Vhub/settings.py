@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
+import platform
+
 
 
 load_dotenv()
@@ -40,9 +42,17 @@ MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://vhub-5dvu.onrender.com").split(",")
+
 CORS_ALLOW_ALL_ORIGINS = True
 
+
+if platform.system() == "Windows":
+    WKHTMLTOPDF_PATH = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
+else:
+    WKHTMLTOPDF_PATH = "/usr/bin/wkhtmltopdf"
+
+PDFKIT_CONFIG = {"wkhtmltopdf": WKHTMLTOPDF_PATH}
 
 
 
@@ -208,6 +218,3 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
-PDFKIT_CONFIG = {
-    "wkhtmltopdf": os.getenv("WKHTMLTOPDF_PATH", "/usr/bin/wkhtmltopdf")
-}
