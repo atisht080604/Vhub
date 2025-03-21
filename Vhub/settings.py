@@ -34,7 +34,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["*"]  # Allows all hosts (for testing)
+
 
 
 STATIC_URL = os.getenv("STATIC_URL", "/static/")
@@ -42,7 +43,8 @@ MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://vhub-5dvu.onrender.com").split(",")
+CSRF_TRUSTED_ORIGINS = ["https://vhub-5dvu.onrender.com"]
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 
