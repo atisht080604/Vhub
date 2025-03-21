@@ -15,6 +15,9 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,17 +26,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j3321e=k_5d!gke@c8#sv#5e(-v%cd=wh$r^tinz3!o1j8=ti4'
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "0.0.0.0,127.0.0.1,localhost").split(",")
 
-MEDIA_URL = '/media/'
+STATIC_URL = os.getenv("STATIC_URL", "/static/")
+MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
@@ -98,15 +101,22 @@ AUTH_USER_MODEL = 'Vapp.User'
 
 
 
+DATABASE_URL = os.getenv("DATABASE_URL", "mysql://root:root@localhost:3306/Vh_db")
+
+db_scheme, db_info = DATABASE_URL.split("://")
+db_user_pass, db_host_port_name = db_info.split("@")
+db_user, db_pass = db_user_pass.split(":")
+db_host_port, db_name = db_host_port_name.split("/")
+db_host, db_port = db_host_port.split(":")
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Vh_db',  # Your new database name
-        'USER': 'root',                  # Your MySQL username
-        'PASSWORD': 'root',       # Your MySQL password
-        'HOST': 'localhost',              # If remote, enter IP
-        'PORT': '3306',                   # Default MySQL port
+        'NAME': db_name,
+        'USER': db_user,
+        'PASSWORD': db_pass,
+        'HOST': db_host,
+        'PORT': int(db_port),  # Ensure port is an integer
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
@@ -148,7 +158,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -156,11 +166,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings React (Vite) frontend 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React (Vite) frontend
-    "http://127.0.0.1:5173",
-    
-]
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
 
 REST_FRAMEWORK = {
@@ -177,9 +183,9 @@ REST_FRAMEWORK = {
 
 # JWT Authentication settings
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "USER_ID_FIELD": "id",  
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=int(os.getenv("ACCESS_TOKEN_LIFETIME", 1))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(os.getenv("REFRESH_TOKEN_LIFETIME", 7))),
+    "USER_ID_FIELD": "id",
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -190,17 +196,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 load_dotenv()
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'vcoders04@gmail.com')  # ✅ Default value
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'xelu bpum rhvl odmz')  # ✅ Default value
-
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "192.168.1.5","172.20.10.6"]
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 PDFKIT_CONFIG = {
-    "wkhtmltopdf": "/usr/bin/wkhtmltopdf"  # Adjust path if needed
+    "wkhtmltopdf": os.getenv("WKHTMLTOPDF_PATH", "/usr/bin/wkhtmltopdf")
 }
