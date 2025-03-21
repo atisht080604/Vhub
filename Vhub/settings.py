@@ -16,7 +16,7 @@ import os
 from dotenv import load_dotenv
 import platform
 
-
+PORT = os.getenv("PORT", "10000")
 
 load_dotenv()
 
