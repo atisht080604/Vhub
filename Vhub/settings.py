@@ -169,6 +169,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
 
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',  # ✅ Force JSON response
@@ -193,7 +194,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CORS_ALLOW_ALL_ORIGINS = True
-
 
 load_dotenv()
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
